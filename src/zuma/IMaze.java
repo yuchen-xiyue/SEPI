@@ -3,6 +3,8 @@ package zuma;
 import java.util.Vector;
 
 public interface IMaze {
+	public void update();
+	
 	public INode getOrigin();
 
 	public INode getEnd();
