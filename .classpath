@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry excluding="src/|Texture/" kind="src" path=""/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/j3dcore.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/j3dutils.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/vecmath.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="j3d/j3dcore.jar"/>
+	<classpathentry kind="lib" path="j3d/j3dutils.jar"/>
+	<classpathentry kind="lib" path="j3d/jogamp-fat-test.jar"/>
+	<classpathentry kind="lib" path="j3d/jogamp-fat.jar"/>
+	<classpathentry kind="lib" path="j3d/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

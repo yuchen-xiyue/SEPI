@@ -5,7 +5,7 @@ import java.util.Vector;
 import javax.media.j3d.Canvas3D;
 
 public interface IBall {
-	public Canvas3D getCanvas(); 
+	
 	
 	public void proceed(); //Proceed one Node length. 
 	
