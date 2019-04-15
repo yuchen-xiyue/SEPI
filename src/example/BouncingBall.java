@@ -65,6 +65,14 @@ public class BouncingBall extends Applet implements ActionListener, KeyListener 
 		objTrans.addChild(sphere);
 
 		objRoot.addChild(objTrans);
+		
+//		Sphere sphere1 = new Sphere(0.05f);
+//		
+//		objTrans = new TransformGroup();
+//
+//		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//		
+//		objTrans.addChild(sphere1);
 
 		BoundingSphere bounds =
 
