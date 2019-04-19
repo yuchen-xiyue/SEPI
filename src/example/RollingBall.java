@@ -18,6 +18,7 @@ import javax.media.j3d.*;
 
 import javax.vecmath.*;
 
+import com.sun.j3d.utils.geometry.ColorCube;
 import com.sun.j3d.utils.geometry.Sphere;
 
 import javax.swing.Timer;
@@ -30,13 +31,19 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	
 	private Vector3f o = new Vector3f(0f, 0f, 0f);
 	
-	private float r = 0.5f;
+	private float r = 0f;
 	
 	private Transform3D trans = new Transform3D();
 	
 	private Timer timer;
 	
-	float angle = (float) Math.asin((p.y-o.y)/r);
+	private float sign = -1; 
+	
+	private BranchGroup objRoot; 
+	
+	private int t = 0;
+	
+	float angle = 0.0f;
 	
 	public Node createSphere() {
 		Sphere sphere = new Sphere(0.05f);
@@ -57,7 +64,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	public BranchGroup createSceneGraph() {
 		// Create the root of the branch graph
 
-				BranchGroup objRoot = new BranchGroup();
+				objRoot = new BranchGroup();
 
 				objTrans = new TransformGroup();
 
@@ -67,21 +74,30 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 
 				// Create a simple shape leaf node, add it to the scene graph.
 
-				Sphere sphere = new Sphere(0.05f);
-
+//				Sphere sphere = new Sphere(0.05f);
+//
+//				objTrans = new TransformGroup();
+//
+//				objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//
+//				Transform3D pos1 = new Transform3D();
+//
+//				pos1.setTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
+//
+//				objTrans.setTransform(pos1);
+//
+//				objTrans.addChild(sphere);
 				objTrans = new TransformGroup();
-
+				
 				objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-
-				Transform3D pos1 = new Transform3D();
-
-				pos1.setTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
-
-				objTrans.setTransform(pos1);
-
-				objTrans.addChild(sphere);
-
+				Transform3D transform = new Transform3D(); 
+				ColorCube cb = new ColorCube(0.1f);
+				transform.setTranslation((new Vector3f(.0f,.0f,.0f)));
+				objTrans.setTransform(transform);
+				objTrans.addChild(cb);
 				objRoot.addChild(objTrans);
+
+				objRoot.addChild(createSphere());
 				
 //				Sphere sphere1 = new Sphere(0.05f);
 //				
@@ -175,11 +191,23 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		angle = (float) (angle + 0.01*Math.PI);
-		p.setX((float) (r*Math.cos(angle))+o.x);
-		p.setY((float) (r*Math.sin(angle))+o.y);
+		angle = (float) (angle + 0.01f);
+		if(angle > 2) {
+			angle -= 2;
+		}
+		p.setX((float) (r*Math.cos(angle*Math.PI))+o.x);
+		p.setY((float) (r*Math.sin(angle*Math.PI))+o.y);
 		trans.setTranslation(p);
 		objTrans.setTransform(trans);
+		if(r >= 0.5) {
+			sign = 0;
+		}
+		
+		else if(r <= 0) {
+			sign = 1;
+		}
+		
+			r += 0.0005*sign;
 		//System.out.println(p.toString());
 	} 
 	
