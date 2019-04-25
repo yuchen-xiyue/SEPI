@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.Time;
 
 import com.sun.j3d.utils.applet.MainFrame;
 
@@ -27,27 +26,59 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 
 	private TransformGroup objTrans;
 	
+	private ColorSphere colorSphere[] = new ColorSphere[6];
+	
 	private Vector3f p = new Vector3f(-0.5f, 0f, 0f);
-	
-	private Vector3f o = new Vector3f(0f, 0f, 0f);
-	
-	private float r = 0f;
 	
 	private Transform3D trans = new Transform3D();
 	
 	private Timer timer;
 	
-	private float sign = -1; 
-	
 	private BranchGroup objRoot; 
 	
 	private int t = 0;
 	
-	float angle = 0.0f;
+	private class ColorSphere {
+		private TransformGroup objTrans1;
+		private float angle;
+		private float sign;
+		private float r; 
+		
+		ColorSphere(float angle) {
+			objTrans1 = new TransformGroup();
+			//objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+			this.angle = angle;
+			sign = -1;
+			r = 0.0f; 
+		}
+		
+		public void action() {
+			angle = (float) (angle + 0.01f);
+			if(angle > 2) {
+				angle -= 2;
+			}
+			p.setX((float) (r*Math.cos(angle*Math.PI)));
+			p.setY((float) (r*Math.sin(angle*Math.PI)));
+			trans.setTranslation(p);
+			objTrans1.setTransform(trans);
+			if(r >= 0.5) {
+				sign = 0;
+			}
+			
+			else if(r <= 0) {
+				sign = 1;
+			}
+			
+			r += 0.0005*sign;
+		}
+	}
 	
-	public Node createSphere() {
+	public Node createSphere(TransformGroup objTrans) {
 		Sphere sphere = new Sphere(0.05f);
-		objTrans = new TransformGroup();
+		//Appearance ap = new Appearance();
+		//ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
+		
+		//sphere.setAppearance(ap);
 
 		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 
@@ -58,9 +89,11 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 		objTrans.setTransform(pos1);
 
 		objTrans.addChild(sphere);
+		
 		return objTrans;
 		
 	}
+
 	public BranchGroup createSceneGraph() {
 		// Create the root of the branch graph
 
@@ -95,9 +128,9 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 				transform.setTranslation((new Vector3f(.0f,.0f,.0f)));
 				objTrans.setTransform(transform);
 				objTrans.addChild(cb);
-				objRoot.addChild(objTrans);
-
-				objRoot.addChild(createSphere());
+				//objRoot.addChild(objTrans);
+				for(int i = 0; i < 6; i ++ )
+				objRoot.addChild(createSphere(colorSphere[i].objTrans1));
 				
 //				Sphere sphere1 = new Sphere(0.05f);
 //				
@@ -132,11 +165,17 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 				ambientLightNode.setInfluencingBounds(bounds);
 
 				objRoot.addChild(ambientLightNode);
-
+				
+				//Transform3D t = new Transform3D();  t.rotX(Math.PI/4);
+				//objRoot.set
 				return objRoot;
 		
 	}
 	public RollingBall() {
+		
+
+		for(int i = 0; i < 6; i ++ )
+			colorSphere[i] = new ColorSphere((float) (i*0.33));
 		setLayout(new BorderLayout());
 
 		GraphicsConfiguration config =
@@ -191,23 +230,26 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		angle = (float) (angle + 0.01f);
-		if(angle > 2) {
-			angle -= 2;
-		}
-		p.setX((float) (r*Math.cos(angle*Math.PI))+o.x);
-		p.setY((float) (r*Math.sin(angle*Math.PI))+o.y);
-		trans.setTranslation(p);
-		objTrans.setTransform(trans);
-		if(r >= 0.5) {
-			sign = 0;
-		}
-		
-		else if(r <= 0) {
-			sign = 1;
-		}
-		
-			r += 0.0005*sign;
+		for(int i = 0; i < 6; i ++ )
+			colorSphere[i].action();
+//		
+//		colorSphere.angle = (float) (colorSphere.angle + 0.01f);
+//		if(colorSphere.angle > 2) {
+//			colorSphere.angle -= 2;
+//		}
+//		p.setX((float) (colorSphere.r*Math.cos(colorSphere.angle*Math.PI)));
+//		p.setY((float) (colorSphere.r*Math.sin(colorSphere.angle*Math.PI)));
+//		trans.setTranslation(p);
+//		objTrans.setTransform(trans);
+//		if(colorSphere.r >= 0.5) {
+//			colorSphere.sign = 0;
+//		}
+//		
+//		else if(colorSphere.r <= 0) {
+//			colorSphere.sign = 1;
+//		}
+//		
+//		colorSphere.r += 0.0005*colorSphere.sign;
 		//System.out.println(p.toString());
 	} 
 	

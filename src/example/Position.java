@@ -16,7 +16,7 @@ public class Position {
 
 		BranchGroup group = new BranchGroup();
 
-		// X axis made of spheres
+		// X axis made of spheres 
 
 		for (float x = -1.0f; x <= 1.0f; x = x + 0.1f)
 
