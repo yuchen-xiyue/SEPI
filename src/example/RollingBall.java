@@ -2,6 +2,7 @@ package example;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 
 	private TransformGroup objTrans;
 	
-	private ColorSphere colorSphere[] = new ColorSphere[6];
+	private ColorSphere colorSphere[] = new ColorSphere[36];
 	
 	private Vector3f p = new Vector3f(-0.5f, 0f, 0f);
 	
@@ -40,6 +41,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	
 	private class ColorSphere {
 		private TransformGroup objTrans1;
+		private Color3f c;
 		private float angle;
 		private float sign;
 		private float r; 
@@ -50,10 +52,20 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 			this.angle = angle;
 			sign = -1;
 			r = 0.0f; 
+			c = new Color3f(1.0f, 1.0f, 1.0f);
+		}
+		
+		ColorSphere(float angle, Color3f c) {
+			this.c = c;
+			objTrans1 = new TransformGroup();
+			//objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+			this.angle = angle;
+			sign = -1;
+			r = 0.0f; 
 		}
 		
 		public void action() {
-			angle = (float) (angle + 0.01f);
+			angle = (float) (angle + 0.005f);
 			if(angle > 2) {
 				angle -= 2;
 			}
@@ -61,7 +73,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 			p.setY((float) (r*Math.sin(angle*Math.PI)));
 			trans.setTranslation(p);
 			objTrans1.setTransform(trans);
-			if(r >= 0.5) {
+			if(r >= 0.6) {
 				sign = 0;
 			}
 			
@@ -73,24 +85,54 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 		}
 	}
 	
-	public Node createSphere(TransformGroup objTrans) {
+	public Node createSphere(ColorSphere cs) {
 		Sphere sphere = new Sphere(0.05f);
 		//Appearance ap = new Appearance();
 		//ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
 		
 		//sphere.setAppearance(ap);
 
-		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		cs.objTrans1.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 
 		Transform3D pos1 = new Transform3D();
 
 		pos1.setTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
 
-		objTrans.setTransform(pos1);
+		cs.objTrans1.setTransform(pos1);
 
-		objTrans.addChild(sphere);
+		cs.objTrans1.addChild(sphere);
+		trans = new Transform3D();
+		trans.rotX(-5*Math.PI/12);
+		cs.objTrans1.setTransform(trans);
 		
-		return objTrans;
+		
+		//BoundingSphere bounds =
+//
+			//	new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+
+		//Color3f light1Color = new Color3f(1.0f, 1.0f, 1.0f);
+
+		//Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
+
+		//DirectionalLight light1
+//
+			//	= new DirectionalLight(light1Color, light1Direction);
+
+		//light1.setInfluencingBounds(bounds);
+
+		//cs.objTrans1.addChild(light1);
+
+		// Set up the ambient light
+
+		//Color3f ambientColor = new Color3f(1.0f, 1.0f, 1.0f);
+
+		//AmbientLight ambientLightNode = new AmbientLight(ambientColor);
+
+		//ambientLightNode.setInfluencingBounds(bounds);
+
+		//cs.objTrans1.addChild(ambientLightNode);
+		
+		return cs.objTrans1;
 		
 	}
 
@@ -120,17 +162,18 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 //				objTrans.setTransform(pos1);
 //
 //				objTrans.addChild(sphere);
-				objTrans = new TransformGroup();
+				//objTrans = new TransformGroup();
 				
-				objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-				Transform3D transform = new Transform3D(); 
-				ColorCube cb = new ColorCube(0.1f);
-				transform.setTranslation((new Vector3f(.0f,.0f,.0f)));
-				objTrans.setTransform(transform);
-				objTrans.addChild(cb);
+				//objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+//				Transform3D transform = new Transform3D(); 
+//				ColorCube cb = new ColorCube(0.1f);
+//				transform.rotX(-Math.PI/4);
+//				objTrans.setTransform(transform);
+//				objTrans.addChild(cb);
 				//objRoot.addChild(objTrans);
-				for(int i = 0; i < 6; i ++ )
-				objRoot.addChild(createSphere(colorSphere[i].objTrans1));
+				for(int i = 0; i < 36; i ++ )
+				objTrans.addChild(createSphere(colorSphere[i]));
+				//objRoot.addChild(objTrans);
 				
 //				Sphere sphere1 = new Sphere(0.05f);
 //				
@@ -139,7 +182,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 //				objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 //				
 //				objTrans.addChild(sphere1);
-
+//
 				BoundingSphere bounds =
 
 						new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
@@ -159,7 +202,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 				// Set up the ambient light
 
 				Color3f ambientColor = new Color3f(1.0f, 1.0f, 1.0f);
-
+				
 				AmbientLight ambientLightNode = new AmbientLight(ambientColor);
 
 				ambientLightNode.setInfluencingBounds(bounds);
@@ -174,8 +217,8 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	public RollingBall() {
 		
 
-		for(int i = 0; i < 6; i ++ )
-			colorSphere[i] = new ColorSphere((float) (i*0.33));
+		for(int i = 0; i < 36; i ++ )
+			colorSphere[i] = new ColorSphere((float) (i*0.0556));
 		setLayout(new BorderLayout());
 
 		GraphicsConfiguration config =
@@ -230,7 +273,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		for(int i = 0; i < 6; i ++ )
+		for(int i = 0; i < 36; i ++ )
 			colorSphere[i].action();
 //		
 //		colorSphere.angle = (float) (colorSphere.angle + 0.01f);
