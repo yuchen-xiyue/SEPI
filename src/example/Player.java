@@ -28,14 +28,15 @@ public class Player extends Applet implements ActionListener, KeyListener {
 
 	private TransformGroup objTrans;
 	private Transform3D trans = new Transform3D();
-	private float height = 0.0f;
-	private float sign = 1.0f;
+	private float angle;
+	private float length;
 	private Timer timer;
-	private float xloc = 0.0f;
+	private boolean isIn = false;
+	private boolean isOut = false; 
 	private boolean isLeft = false; 
 	private boolean isRight = false;
 
-	public BranchGroup creatSceneGraph() {
+	public BranchGroup createSceneGraph() {
 		BranchGroup objRoot = new BranchGroup();
 		objTrans = new TransformGroup();
 		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -78,9 +79,14 @@ public class Player extends Applet implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
+		if(isRight)
+			angle += 0.01*Math.PI;
+		else if(isLeft)
+			angle -= 0.01*Math.PI; 
 	}
 	public Player() {		
+		angle = 0;
+		length = 0; 
 		setLayout(new BorderLayout());
 
 	GraphicsConfiguration config =
@@ -97,6 +103,13 @@ public class Player extends Applet implements ActionListener, KeyListener {
 
 	timer.start();
 		
+	BranchGroup scene = createSceneGraph();
+
+	SimpleUniverse u = new SimpleUniverse(c);
+
+	u.getViewingPlatform().setNominalViewingTransform();
+
+	u.addBranchGraph(scene);
 	}
 
 	public static void main(String[] args) {
