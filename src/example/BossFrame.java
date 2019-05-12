@@ -23,7 +23,8 @@ public class BossFrame extends Frame {
 		});
 	}
 
-	@Override
+
+	
 	public void paint(Graphics g) {
 		g.drawImage(image, 200, 200, null);
 	}
