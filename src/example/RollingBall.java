@@ -15,6 +15,8 @@ import com.sun.j3d.utils.applet.MainFrame;
 
 import com.sun.j3d.utils.universe.*;
 
+import zuma.SpaceShip;
+
 import javax.media.j3d.*;
 
 import javax.vecmath.*;
@@ -33,6 +35,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	Texture texture;
 	 Appearance ap; 
 	 int primflags;
+	private SpaceShip ss;
 	 
 	  private TransformGroup objTrans;
 	
@@ -74,6 +77,8 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 		}
 		
 		public void action() {
+			//trans = new Transform3D();
+			
 			angle = (float) (angle + 0.005f);
 			if(angle > 2) {
 				angle -= 2;
@@ -95,12 +100,13 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 	}
 	
 	public Node createSphere(ColorSphere cs) {
-		Sphere sphere = new Sphere(0.05f, primflags, ap);
+		//Sphere sphere = new Sphere(0.01f);//, primflags, ap);
 		//Appearance ap = new Appearance();
 		//ap.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
 		
 		//sphere.setAppearance(ap);
 
+		
 		cs.objTrans1.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 
 		cs.objTrans1.setCapability(TransformGroup.ALLOW_AUTO_COMPUTE_BOUNDS_READ);
@@ -111,7 +117,7 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 
 		cs.objTrans1.setTransform(pos1);
 
-		cs.objTrans1.addChild(sphere);
+		cs.objTrans1.addChild(new Sphere(0.01f));
 		trans = new Transform3D();
 		trans.rotX(-5*Math.PI/12);
 		cs.objTrans1.setTransform(trans);
@@ -178,12 +184,16 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 				//objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 				Transform3D transform = new Transform3D(); 
 				ColorCube cb = new ColorCube(0.1f);
-				transform.rotX(-Math.PI/4);
+				//transform.rotX(-Math.PI/4);
 				objTrans.setTransform(transform);
 				//objTrans.addChild(cb);
 				//objRoot.addChild(objTrans);
+				//transform = new Transform3D(); 
+				transform.setScale(0.05);
+				ss.objTrans.setTransform(transform);
+				objTrans.addChild(ss.objTrans);
 				for(int i = 0; i < 36; i ++ )
-				objTrans.addChild(createSphere(colorSphere[i]));
+					objTrans.addChild(createSphere(colorSphere[i]));
 				//objRoot.addChild(objTrans);
 				
 //				Sphere sphere1 = new Sphere(0.05f);
@@ -226,6 +236,9 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 		
 	}
 	public RollingBall() {
+
+		ss = new SpaceShip();
+		
 		
 		texture = loader.getTexture();
 
@@ -329,6 +342,12 @@ public class RollingBall extends Applet implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 		for(int i = 0; i < 36; i ++ )
 			colorSphere[i].action();
+		
+		Transform3D trans = new Transform3D();
+		ss.action();
+		ss.objTrans.getTransform(trans);
+
+		ss.objTrans.setTransform(trans);
 //		
 //		colorSphere.angle = (float) (colorSphere.angle + 0.01f);
 //		if(colorSphere.angle > 2) {
