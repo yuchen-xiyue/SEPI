@@ -1,4 +1,4 @@
-package zuma;
+package toolkits;
 
 import java.applet.Applet;
 import java.awt.event.ActionEvent;
@@ -11,14 +11,15 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.Timer;
 import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 
-import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.geometry.Sphere;
 
-public class SpaceShip extends Applet implements ActionListener, KeyListener {
+import zuma.SpaceShip;
+
+public abstract class EnemyShip extends Applet implements ActionListener, KeyListener{
+
 	public static final int RED = 0;
 	public static final int ORANGE = 1;
 	public static final int YELLOW = 2;
@@ -36,20 +37,15 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	private int sign;
 	public TransformGroup[] tg;
 	public static final float SPEED = 0.01f;
-	public static final int SHOT_SPEED = 5;
+	public static final int SHOT_SPEED = 1;
 	private int shot_cd = 0;
 	private float angleZ;
 	private float angleY; 
 	private float length;
-	protected boolean isShot;
-	private boolean isLeft;
-	private boolean isRight;
-	private boolean isUp;
-	private boolean isDown;
 	private int color;
 	private Timer timer;
-
-	public SpaceShip(TransformGroup objTrans) {
+	
+	public EnemyShip(TransformGroup objTrans) {
 		objRoot = new  BranchGroup(); 
 		tg = new TransformGroup[6];
 		objRotate = new TransformGroup();
@@ -61,29 +57,33 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		sign = 1;
 		angleZ = 0;
 		angleY = 0;
-		length = 0.5f;
+		length = 0.0f;
 		radius = 0.0f;
-		isShot = false;
-		isLeft = false;
-		isRight = false;
-		isUp = false;
-		isDown = false;
 		color = RED;  
-		}
+		// TODO Auto-generated constructor stub
+	}
 	
-	public void shot() {
-		Transform3D trans = new Transform3D(); 
-		objRotate.getTransform(trans);
-		position.scale(-1f);
-		Bullet bullet = new Bullet(position, angleZ, color);
-		Vector3f speed = new Vector3f(position.getX(), position.getY(), position.getZ());
-		speed.normalize();
-		speed.scale(-0.02f);
-		bullet.setSpeed(speed);
-		bullets.addChild(bullet.createSceneGraph());
+	@Override
+	public void keyPressed(KeyEvent e) {
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+
+	}
+//	@Override
+//	public void actionPerformed(ActionEvent e) {
+//		
+//	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public void action() {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 		if (sign == 1) {
 			radius += 0.01;
 			if (radius >= 1.0)
@@ -145,6 +145,20 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 			tg[5].getTransform(rightward);
 			rightward.setTranslation(new Vector3f(1.0f + radius, 0.0f, 0.0f));
 			tg[5].setTransform(rightward);
+			
+			if(length <= 0.1) {
+				length = 0.1f;
+			}
+			
+			if(length >= 0.8f) {
+				length = 0.8f;
+			}
+			
+				shot();
+				shot();
+				shot();
+				shot();
+
 		}
 		Transform3D trans = new Transform3D();  
 		objTrans.getTransform(trans);
@@ -158,209 +172,9 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		trans.rotY(angleY);
 		objRotate1.setTransform(trans);
 		angleY = angleY + SPEED;
-
-		if(isLeft) {
-			angleZ  = angleZ - (float)(SPEED/length);
-		}
-		
-		if(isRight) {
-			angleZ  = angleZ + (float)(SPEED/length);
-		}
-		
-		if(isUp) {
-			length  = length - 0.01f;
-		}
-		
-		if(isDown) {
-			length  = length + 0.01f;
-		}
-		
-		if(length <= 0.1) {
-			length = 0.1f;
-		}
-		
-		if(length >= 0.8f) {
-			length = 0.8f;
-		}
+		position = new Vector3f((float)(length*Math.sin(-angleZ)), (float)(length*Math.cos(-angleZ)), 0.0f);
 	}
-
-	public static void main(String[] args) {
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_X) {
-			if(color >= VIOLET)
-				color = RED;
-			else
-				color = color + 1;
-		}
-
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-			isLeft = true;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_Z) {
-			isShot = true;
-		}
-
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			isRight = true;
-		}
-
-		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			isUp = true;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			isDown = true;
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
-		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-			isLeft = false;
-		}
-
-		if(e.getKeyCode() == KeyEvent.VK_Z) {
-			isShot = false;
-		}
-
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			isRight = false;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			isUp = false;
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			isDown = false;
-		}
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-			if (sign == 1) {
-				radius += 0.01;
-				if (radius >= 1.0)
-					sign = -1;
-
-				Transform3D toward = new Transform3D();
-				tg[1].getTransform(toward);
-				toward.setTranslation(new Vector3f(0.0f, 1.0f + radius, 0.0f));
-				tg[1].setTransform(toward);
-				
-				Transform3D upward = new Transform3D();
-				tg[2].getTransform(upward);
-				upward.setTranslation(new Vector3f(0.0f, 0.0f, 1.0f + radius));
-				tg[2].setTransform(upward);
-
-				Transform3D leftward = new Transform3D();
-				tg[3].getTransform(leftward);
-				leftward.setTranslation(new Vector3f(-1.0f - radius, 0.0f, 0.0f));
-				tg[3].setTransform(leftward);
-
-				Transform3D downward = new Transform3D();
-				tg[4].getTransform(downward);
-				downward.setTranslation(new Vector3f(0.0f, 0.0f,  -1.0f - radius));
-				tg[4].setTransform(downward);
-
-				Transform3D rightward = new Transform3D();
-				tg[5].getTransform(rightward);
-				rightward.setTranslation(new Vector3f(1.0f + radius, 0.0f, 0.0f));
-				tg[5].setTransform(rightward);
-
-			}
-
-			else {
-				radius -= 0.01;
-				if (radius <= 0.5)
-					sign = 1;
-
-				Transform3D toward = new Transform3D();
-				tg[1].getTransform(toward);
-				toward.setTranslation(new Vector3f(0.0f, 1.0f + radius, 0.0f));
-				tg[1].setTransform(toward);
-				
-				Transform3D upward = new Transform3D();
-				tg[2].getTransform(upward);
-				upward.setTranslation(new Vector3f(0.0f, 0.0f, 1.0f + radius));
-				tg[2].setTransform(upward);
-
-				Transform3D leftward = new Transform3D();
-				tg[3].getTransform(leftward);
-				leftward.setTranslation(new Vector3f(-1.0f - radius, 0.0f, 0.0f));
-				tg[3].setTransform(leftward);
-
-				Transform3D downward = new Transform3D();
-				tg[4].getTransform(downward);
-				downward.setTranslation(new Vector3f(0.0f, 0.0f,  -1.0f - radius));
-				tg[4].setTransform(downward);
-
-				Transform3D rightward = new Transform3D();
-				tg[5].getTransform(rightward);
-				rightward.setTranslation(new Vector3f(1.0f + radius, 0.0f, 0.0f));
-				tg[5].setTransform(rightward);
-
-			}
-			Transform3D trans = new Transform3D();  
-			objTrans.getTransform(trans);
-			trans.setTranslation( new  Vector3f(0.0f, -length, 0.0f));
-			objTrans.setTransform(trans);
-			objRotate.getTransform(trans);
-			trans.rotZ(angleZ);
-			objRotate.setTransform(trans);
-
-			objRotate1.getTransform(trans);
-			trans.rotY(angleY);
-			objRotate1.setTransform(trans);
-			angleY = angleY + SPEED;
-			position = new Vector3f((float)(length*Math.sin(-angleZ)), (float)(length*Math.cos(-angleZ)), 0.0f);
-			if(isLeft) {
-				angleZ  = angleZ - (float)(SPEED/length);
-			}
-			
-			if(isRight) {
-				angleZ  = angleZ + (float)(SPEED/length);
-			}
-			
-			if(isUp) {
-				length  = length - 0.005f;
-			}
-			
-			if(isDown) {
-				length  = length + 0.005f;
-			}
-
-			if(length <= 0.1) {
-				length = 0.1f;
-			}
-			
-			if(length >= 0.8f) {
-				length = 0.8f;
-			}
-			
-			if(shot_cd <= 0 && isShot) {
-				shot();
-				shot_cd = SHOT_SPEED;
-			}
-			
-			else 
-				shot_cd --;
-	}
-
+	
 	public BranchGroup createSceneGraph() {
 
 		objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -451,4 +265,8 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	public BranchGroup getBullet() {
 		return bullets;
 	}
+
+
+	protected abstract void shot();
+
 }

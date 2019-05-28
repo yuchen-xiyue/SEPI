@@ -30,6 +30,9 @@ public class Main extends Applet implements ActionListener, KeyListener {
 	private Transform3D trans;
 	private BranchGroup objRoot; 
 	private SpaceShip ss;
+	private int color;
+	private Color3f[] colorSet;
+	private SpellCard1 sc1; 
 	
 	public BranchGroup createSceneGraph() {
 		BoundingSphere bounds =
@@ -40,6 +43,8 @@ public class Main extends Applet implements ActionListener, KeyListener {
 				= new DirectionalLight(light1Color, light1Direction);
 		light1.setInfluencingBounds(bounds);
 		objRoot.addChild(light1);
+	
+		
 		// Set up the ambient light
 		Color3f ambientColor = new Color3f(1.0f, 1.0f, 1.0f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientColor);
@@ -56,6 +61,15 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		trans.setScale(0.02);
 		objTrans.setTransform(trans);
 		ss = new SpaceShip(objTrans);
+		
+		objTrans = new TransformGroup();
+		trans = new Transform3D();
+		objRoot = new BranchGroup();
+		objTrans.getTransform(trans);
+		trans.setScale(0.02);
+		objTrans.setTransform(trans);
+		sc1 = new SpellCard1(objTrans);
+		
 		this.addKeyListener(ss);
 		this.setFocusable(true);
 		setLayout(new BorderLayout());
@@ -73,20 +87,31 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		u.addBranchGraph(scene);
 		
 		scene = new BranchGroup();
-		scene.addChild(ss.objRotate);
+		scene = ss.createSceneGraph();
 		u.addBranchGraph(scene);
 		
 		scene = new BranchGroup();
-		ss.getBullet(scene);
+		scene = ss.getBullet();
 		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		scene.setCapability(BranchGroup.ALLOW_DETACH);
-		ss.bullets.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		ss.bullets.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		ss.bullets.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-		ss.bullets.setCapability(BranchGroup.ALLOW_DETACH);
-		scene.addChild(ss.bullets);
+		u.addBranchGraph(scene);
+		
+		scene = new BranchGroup();
+		scene = sc1.createSceneGraph();
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		scene.setCapability(BranchGroup.ALLOW_DETACH);
+		u.addBranchGraph(scene);
+		
+		scene = new BranchGroup();
+		scene = sc1.getBullet();
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		scene.setCapability(BranchGroup.ALLOW_DETACH);
 		u.addBranchGraph(scene);
 	}
 	@Override
@@ -110,7 +135,7 @@ public class Main extends Applet implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		ss.actionPerformed(e);
+		//ss.actionPerformed(e);
 		//ss.shot();
 		
 	}
