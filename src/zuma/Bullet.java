@@ -27,6 +27,7 @@ public class Bullet implements ActionListener {
 	private Appearance ap;
 	private Color3f black;
 	private float angle;
+	private EnemyShip target;
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -37,7 +38,14 @@ public class Bullet implements ActionListener {
 		
 		if(position.length()>1) {
 			objRoot.detach();
-		timer.stop();
+			timer.stop();
+		}
+		
+		if(target!= null && position.length()<=0.1f) {
+			
+			target.damaged();
+			objRoot.detach();
+			timer.stop();
 		}
 		
 		//timer.removeActionListener(this);
@@ -83,6 +91,10 @@ public class Bullet implements ActionListener {
 
 	public TransformGroup getTransformGroup() {
 		return objTrans;
+	}
+	
+	public void setTarget(EnemyShip target) {
+		this.target = target; 
 	}
 
 }

@@ -4,16 +4,15 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Vector3f;
 
-import toolkits.EnemyShip;
-
 public class SpellCard1 extends EnemyShip {
-	private int hitPoint = 10000;
+	int hitPoint = 10000;
 	
 	public SpellCard1(TransformGroup objTrans) {
 		super(objTrans);
 	}
 	@Override
 	protected void shot() {
+		for(int i = 0; i < 5; i ++) {
 		float angle = (float)(2*Math.PI*Math.random());
 		int color  = (int) (7*Math.random());
 		Transform3D trans = new Transform3D(); 
@@ -24,6 +23,7 @@ public class SpellCard1 extends EnemyShip {
 		speed.scale(0.01f);
 		ball.setSpeed(speed);
 		bullets.addChild(ball.createSceneGraph());
-		//System.out.println(bullets.getAllChildren());
+			
+		}
 	}
 }

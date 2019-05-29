@@ -12,6 +12,7 @@ import javax.media.j3d.TransformGroup;
 import javax.swing.Timer;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Color3f;
+import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.applet.MainFrame;
@@ -47,6 +48,7 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	private boolean isUp;
 	private boolean isDown;
 	private int color;
+	private EnemyShip target; 
 	private Timer timer;
 
 	public SpaceShip(TransformGroup objTrans) {
@@ -71,16 +73,41 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		color = RED;  
 		}
 	
+	public Vector3f getPosition() {
+		return new Vector3f(position.getX(), position.getY(), position.getZ());
+	}
+	
 	public void shot() {
 		Transform3D trans = new Transform3D(); 
 		objRotate.getTransform(trans);
 		position.scale(-1f);
-		Bullet bullet = new Bullet(position, angleZ, color);
+		Bullet bullet = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ, color);
+		Bullet bullet1 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.04*Math.PI), color);
+		Bullet bullet2 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.04*Math.PI), color);
+		Bullet bullet3 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.08*Math.PI), color);
+		Bullet bullet4 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.08*Math.PI), color);
 		Vector3f speed = new Vector3f(position.getX(), position.getY(), position.getZ());
 		speed.normalize();
 		speed.scale(-0.02f);
 		bullet.setSpeed(speed);
+		bullet1.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(0.04*Math.PI) - speed.getY()*Math.sin(0.04*Math.PI)), (float) (speed.getX()*Math.sin(0.04*Math.PI) + speed.getY()*Math.cos(0.04*Math.PI)), 0.0f));
+		bullet2.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(-0.04*Math.PI) - speed.getY()*Math.sin(-0.04*Math.PI)), (float) (speed.getX()*Math.sin(-0.04*Math.PI) + speed.getY()*Math.cos(-0.04*Math.PI)), 0.0f));
+		bullet3.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(0.08*Math.PI) - speed.getY()*Math.sin(0.08*Math.PI)), (float) (speed.getX()*Math.sin(0.08*Math.PI) + speed.getY()*Math.cos(0.08*Math.PI)), 0.0f));
+		bullet4.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(-0.08*Math.PI) - speed.getY()*Math.sin(-0.08*Math.PI)), (float) (speed.getX()*Math.sin(-0.08*Math.PI) + speed.getY()*Math.cos(-0.08*Math.PI)), 0.0f));
+		if(target!=null) {
+			bullet.setTarget(target);
+			bullet1.setTarget(target);
+			bullet2.setTarget(target);
+			bullet3.setTarget(target);
+			bullet4.setTarget(target);
+			
+		}
+		
 		bullets.addChild(bullet.createSceneGraph());
+		bullets.addChild(bullet1.createSceneGraph());
+		bullets.addChild(bullet2.createSceneGraph());
+		bullets.addChild(bullet3.createSceneGraph());
+		bullets.addChild(bullet4.createSceneGraph());
 	}
 
 	public void action() {
@@ -450,5 +477,9 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	
 	public BranchGroup getBullet() {
 		return bullets;
+	}
+	
+	public void setTarget(EnemyShip target) {
+		this.target = target;
 	}
 }

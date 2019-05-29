@@ -24,6 +24,7 @@ public class Ball implements ActionListener {
 	private Timer timer; 
 	private Appearance ap;
 	private Color3f black;
+	private SpaceShip player; 
 	private static final Color3f[] COLOR_SET = new Color3f[]{new Color3f(1.0f, 0.0f, 0.0f),new Color3f(1.0f, 0.380f, 0f),new Color3f(1.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 1.0f),new Color3f(0.0f, 0.0f, 1.0f),new Color3f(0.627f, 0.125f, 0.941f)};
 	
 	@Override
@@ -33,7 +34,16 @@ public class Ball implements ActionListener {
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
-		
+		if(player !=null) {
+			
+		Vector3f d = player.getPosition();
+		d.sub(this.position);
+		if(d.length()<0.1) {
+
+			objRoot.detach();
+		timer.stop();
+		}
+		}
 		if(position.length()>1) {
 			objRoot.detach();
 		timer.stop();
@@ -69,5 +79,9 @@ public class Ball implements ActionListener {
 	
 	public void setSpeed(Vector3f speed) {
 		this.speed = speed;
+	}
+	
+	public void setPlayer(SpaceShip player) {
+		this.player = player; 
 	}
 }

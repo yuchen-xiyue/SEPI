@@ -7,12 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Enumeration;
 
 import javax.media.j3d.AmbientLight;
+import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.DirectionalLight;
+import javax.media.j3d.ImageComponent2D;
+import javax.media.j3d.Node;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.Timer;
@@ -21,6 +25,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.applet.MainFrame;
+import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class Main extends Applet implements ActionListener, KeyListener {
@@ -29,10 +34,14 @@ public class Main extends Applet implements ActionListener, KeyListener {
 	private TransformGroup objTrans;
 	private Transform3D trans;
 	private BranchGroup objRoot; 
+	private BranchGroup enemyBullets;
+	private BranchGroup myBullets; 
+	private BranchGroup player;
+	private BranchGroup enemy; 
 	private SpaceShip ss;
 	private int color;
 	private Color3f[] colorSet;
-	private SpellCard1 sc1; 
+	private SpellCard2 sc1; 
 	
 	public BranchGroup createSceneGraph() {
 		BoundingSphere bounds =
@@ -66,9 +75,9 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
 		objTrans.getTransform(trans);
-		trans.setScale(0.02);
+		trans.setScale(0.03);
 		objTrans.setTransform(trans);
-		sc1 = new SpellCard1(objTrans);
+		sc1 = new SpellCard2(objTrans);
 		
 		this.addKeyListener(ss);
 		this.setFocusable(true);
@@ -85,34 +94,53 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		SimpleUniverse u = new SimpleUniverse(c);
 		u.getViewingPlatform().setNominalViewingTransform();
 		u.addBranchGraph(scene);
-		
+		objTrans = new TransformGroup(); 
 		scene = new BranchGroup();
 		scene = ss.createSceneGraph();
-		u.addBranchGraph(scene);
+		objTrans.addChild(scene);
+		//u.addBranchGraph(scene);
 		
-		scene = new BranchGroup();
-		scene = ss.getBullet();
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-		scene.setCapability(BranchGroup.ALLOW_DETACH);
-		u.addBranchGraph(scene);
+		myBullets = new BranchGroup();
+		myBullets = ss.getBullet();
+		myBullets.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		myBullets.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		myBullets.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		myBullets.setCapability(BranchGroup.ALLOW_DETACH);
+		objTrans.addChild(myBullets);
+		//u.addBranchGraph(myBullets);
 		
-		scene = new BranchGroup();
-		scene = sc1.createSceneGraph();
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-		scene.setCapability(BranchGroup.ALLOW_DETACH);
-		u.addBranchGraph(scene);
+		enemy = new BranchGroup();
+		enemy = sc1.createSceneGraph();
+		enemy.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		enemy.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		enemy.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		enemy.setCapability(BranchGroup.ALLOW_DETACH);
+		objTrans.addChild(enemy);
+		//u.addBranchGraph(enemy);
 		
+		enemyBullets = new BranchGroup();
+		enemyBullets = sc1.getBullet();
+		enemyBullets.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		enemyBullets.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		enemyBullets.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+		enemyBullets.setCapability(BranchGroup.ALLOW_DETACH);
+		objTrans.addChild(enemyBullets);
+		//u.addBranchGraph(enemyBullets);
+		objTrans.getTransform(trans);
+		trans.rotX((float)(-0.35*Math.PI));
+		objTrans.setTransform(trans);
+		objRoot = new BranchGroup();
+		objRoot.addChild(objTrans);
+		TextureLoader myLoader = new TextureLoader("Texture/bg.png", this);
+		ImageComponent2D myImage = myLoader.getImage();
 		scene = new BranchGroup();
-		scene = sc1.getBullet();
 		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-		scene.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-		scene.setCapability(BranchGroup.ALLOW_DETACH);
-		u.addBranchGraph(scene);
+		Background bg = new Background(scene);
+		bg.setImage(myImage);
+		bg.setApplicationBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+
+		objTrans.addChild(scene);
+		u.addBranchGraph(objRoot);		ss.setTarget(sc1);
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -137,7 +165,6 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		// TODO Auto-generated method stub
 		//ss.actionPerformed(e);
 		//ss.shot();
-		
 	}
 
 	public static void main(String[] args) {

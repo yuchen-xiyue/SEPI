@@ -1,4 +1,4 @@
-package toolkits;
+package zuma;
 
 import java.applet.Applet;
 import java.awt.event.ActionEvent;
@@ -16,7 +16,6 @@ import javax.vecmath.Vector3f;
 import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.geometry.Sphere;
 
-import zuma.SpaceShip;
 
 public abstract class EnemyShip extends Applet implements ActionListener, KeyListener{
 
@@ -32,7 +31,6 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	public TransformGroup objRotate1;
 	public TransformGroup objTrans;
 	public BranchGroup bullets;
-	private Vector3f position;
 	private float radius;
 	private int sign;
 	public TransformGroup[] tg;
@@ -44,6 +42,8 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	private float length;
 	private int color;
 	private Timer timer;
+	private SpaceShip player; 
+	private int hitPoint;
 	
 	public EnemyShip(TransformGroup objTrans) {
 		objRoot = new  BranchGroup(); 
@@ -53,7 +53,6 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 		bullets = new BranchGroup();
 		bullets.setCapability(BranchGroup.ALLOW_DETACH);
 		this.objTrans = objTrans;
-		position = new Vector3f();
 		sign = 1;
 		angleZ = 0;
 		angleY = 0;
@@ -79,6 +78,10 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void damaged() {
+		hitPoint --;
 	}
 
 	@Override
@@ -146,20 +149,8 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 			rightward.setTranslation(new Vector3f(1.0f + radius, 0.0f, 0.0f));
 			tg[5].setTransform(rightward);
 			
-			if(length <= 0.1) {
-				length = 0.1f;
-			}
-			
-			if(length >= 0.8f) {
-				length = 0.8f;
-			}
-			
-				shot();
-				shot();
-				shot();
-				shot();
-
 		}
+		shot();
 		Transform3D trans = new Transform3D();  
 		objTrans.getTransform(trans);
 		trans.setTranslation( new  Vector3f(0.0f, -length, 0.0f));
@@ -172,8 +163,7 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 		trans.rotY(angleY);
 		objRotate1.setTransform(trans);
 		angleY = angleY + SPEED;
-		position = new Vector3f((float)(length*Math.sin(-angleZ)), (float)(length*Math.cos(-angleZ)), 0.0f);
-	}
+		}
 	
 	public BranchGroup createSceneGraph() {
 
