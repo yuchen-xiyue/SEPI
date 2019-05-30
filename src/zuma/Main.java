@@ -79,6 +79,7 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		objTrans = new TransformGroup();
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
+		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objTrans.getTransform(trans);
 		trans.setScale(0.02);
 		objTrans.setTransform(trans);
@@ -87,6 +88,7 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		objTrans = new TransformGroup();
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
+		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objTrans.getTransform(trans);
 		trans.setScale(0.03);
 		objTrans.setTransform(trans);
@@ -143,6 +145,7 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		trans.rotX((float)(-1*view*Math.PI));
 		objTrans.setTransform(trans);
 		objRoot = new BranchGroup();
+		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objRoot.addChild(objTrans);
 		TextureLoader myLoader = new TextureLoader("Texture/bg.png", this);
 		ImageComponent2D myImage = myLoader.getImage();
@@ -176,7 +179,6 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		   ap.setTextureAttributes(texAttr);
 		   
 		   hud = new Hud(ss);
-		  
 		   objRoot.addChild(hud.createSceneGraph());
 
 	}
