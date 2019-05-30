@@ -50,8 +50,10 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	private int color;
 	private EnemyShip target; 
 	private Timer timer;
+	private int score; 
 
 	public SpaceShip(TransformGroup objTrans) {
+		setScore(0);
 		objRoot = new  BranchGroup(); 
 		tg = new TransformGroup[6];
 		objRotate = new TransformGroup();
@@ -86,9 +88,10 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		Bullet bullet2 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.04*Math.PI), color);
 		Bullet bullet3 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.08*Math.PI), color);
 		Bullet bullet4 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.08*Math.PI), color);
+		position.scale(-1f);
 		Vector3f speed = new Vector3f(position.getX(), position.getY(), position.getZ());
 		speed.normalize();
-		speed.scale(-0.02f);
+		speed.scale(0.02f);
 		bullet.setSpeed(speed);
 		bullet1.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(0.04*Math.PI) - speed.getY()*Math.sin(0.04*Math.PI)), (float) (speed.getX()*Math.sin(0.04*Math.PI) + speed.getY()*Math.cos(0.04*Math.PI)), 0.0f));
 		bullet2.setSpeed(new Vector3f((float) (speed.getX()*Math.cos(-0.04*Math.PI) - speed.getY()*Math.sin(-0.04*Math.PI)), (float) (speed.getX()*Math.sin(-0.04*Math.PI) + speed.getY()*Math.cos(-0.04*Math.PI)), 0.0f));
@@ -108,6 +111,8 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		bullets.addChild(bullet2.createSceneGraph());
 		bullets.addChild(bullet3.createSceneGraph());
 		bullets.addChild(bullet4.createSceneGraph());
+		
+		
 	}
 
 	public void action() {
@@ -458,7 +463,7 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 
 		for (int i = 0; i < 6; i++) {
 
-			tg[i].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		tg[i].setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 			tg[i].setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 			tg[i].setCapability(TransformGroup.ALLOW_AUTO_COMPUTE_BOUNDS_READ);
 
@@ -471,6 +476,7 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 
 		timer = new Timer(17, this);
 		timer.start();
+		this.setFocusable(false);
 		return  objRoot;
 	}
 
@@ -481,5 +487,17 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	
 	public void setTarget(EnemyShip target) {
 		this.target = target;
+	}
+	
+	public void scoreUpdate(int s) {
+		setScore(getScore() + s);
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 }

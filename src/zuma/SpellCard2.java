@@ -60,6 +60,10 @@ public class SpellCard2 extends EnemyShip {
 		bullets.addChild(ball1.createSceneGraph());
 		bullets.addChild(ball2.createSceneGraph());
 		bullets.addChild(ball3.createSceneGraph());
+		ball.setPlayer(player);
+		ball1.setPlayer(player);
+		ball2.setPlayer(player);
+		ball3.setPlayer(player);
 	}
 
 }

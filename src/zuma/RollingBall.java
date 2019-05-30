@@ -12,15 +12,21 @@ import javax.swing.Timer;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 
+import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.geometry.Sphere;
 
-public class Ball implements ActionListener {
+public class RollingBall implements ActionListener {
 	private Transform3D trans; 
 	public BranchGroup objRoot; 
-	private TransformGroup objTrans; 
+	private TransformGroup objRotate;
+	private TransformGroup objTrans;  
+	private float rotZ;
 	private int color; 
 	private Vector3f position;
-	private Vector3f speed;
+	private float length;
+	private float angle;
+	private float l_a;
+	private float a_a; 
 	private Timer timer; 
 	private Appearance ap;
 	private Color3f black;
@@ -30,10 +36,17 @@ public class Ball implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		position.add(speed);
+		length +=  l_a;
+		angle += a_a;
+		position.x = (float) (length*Math.cos(angle));
+		position.y = (float) (length*Math.sin(angle));
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
+		rotZ +=  0.01f;
+		objRotate.getTransform(trans);
+		trans.rotZ(rotZ);
+		objRotate.setTransform(trans);
 		if(player !=null) {	
 			Vector3f d = player.getPosition();
 			d.scale(-1.00f);
@@ -50,7 +63,13 @@ public class Ball implements ActionListener {
 	}
 	
 	public BranchGroup createSceneGraph() {
-		objTrans.addChild(new Sphere(0.01f, ap));
+		objRotate.addChild(new Sphere(0.03f, Primitive.GENERATE_NORMALS +
+
+				   Primitive.GENERATE_TEXTURE_COORDS,ap));
+		objRotate.getTransform(trans);
+		trans.rotZ(rotZ);
+		objRotate.setTransform(trans);
+		objTrans.addChild(objRotate);
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
@@ -60,27 +79,33 @@ public class Ball implements ActionListener {
 		return objRoot;
 	}
 	
-	public Ball(Vector3f position,int color) {
-		this.color = color;
-		ap = new Appearance();  
+	public RollingBall(float length, float angle,int color, Appearance ap) {
+		this.length = length;
+		this.angle = angle;
+		this.color = color; 
 		black = new Color3f(0.0f, 0.0f, 0.0f); 
-		ap.setMaterial(new Material(COLOR_SET[color], black, COLOR_SET[color], black, 80.f));
+		this.ap = ap; 
+		this.ap.setMaterial(new Material(COLOR_SET[color], black, COLOR_SET[color], black, 80.0f));
+		objRotate = new TransformGroup();
 		objTrans = new TransformGroup();
 		objRoot = new BranchGroup();
 		trans = new Transform3D();
 		this.color = color; 
-		this.position = position;
+		this.position = new Vector3f();
 		objRoot.setCapability(BranchGroup.ALLOW_DETACH);
 		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 	}
 	
-	public void setSpeed(Vector3f speed) {
-		this.speed = speed;
+	public void setSpeed(float l_a, float a_a) {
+		this.l_a = l_a;
+		this.a_a = a_a;
 	}
 	
 	public void setPlayer(SpaceShip player) {
 		this.player = player; 
 	}
+
 }

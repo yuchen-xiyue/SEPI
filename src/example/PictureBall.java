@@ -34,7 +34,7 @@ public PictureBall() {
 
    // Set up the texture map
 
-   TextureLoader loader = new TextureLoader("./Texture/Arizona.jpg",
+   TextureLoader loader = new TextureLoader("./Texture/bg.png",
 
       "LUMINANCE", new Container());
 
@@ -64,7 +64,7 @@ public PictureBall() {
 
     //set up the material
 
-   ap.setMaterial(new Material(red, black, red, black, 1.0f));
+   ap.setMaterial(new Material(white, black, white, black, 1.0f));
 
    
 

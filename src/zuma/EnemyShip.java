@@ -42,7 +42,7 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	private float length;
 	private int color;
 	private Timer timer;
-	private SpaceShip player; 
+	protected SpaceShip player; 
 	private int hitPoint;
 	
 	public EnemyShip(TransformGroup objTrans) {
@@ -259,4 +259,8 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 
 	protected abstract void shot();
 
+	protected void setPlayer(SpaceShip player) {
+		this.player = player; 
+		
+	}
 }
