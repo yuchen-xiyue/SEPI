@@ -1,4 +1,4 @@
-package zuma;
+package game;
 
 import java.awt.Container;
 
@@ -10,6 +10,8 @@ import javax.vecmath.Color4f;
 import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.image.TextureLoader;
+
+import zuma.RollingBall;
 
 public class SpellCard3 extends EnemyShip {
 	private static final int MAX_HP = 1000;
@@ -179,7 +181,7 @@ public class SpellCard3 extends EnemyShip {
 		}
 	}
 
-	protected float rate() {
+	public float rate() {
 		// TODO Auto-generated method stub
 		if (hitPoint > 0)
 			return (float) hitPoint / MAX_HP;

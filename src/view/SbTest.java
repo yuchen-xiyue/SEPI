@@ -4,11 +4,11 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-public class sbTest {
+public class SbTest {
 //	public static void main(String[] args) {
-	public sbTest() {
-		 scoreboard s= new scoreboard();
-		JFrame window=new JFrame("score");
+	public void SbTest() {
+		Scoreboard s = new Scoreboard();
+		JFrame window = new JFrame("score");
 		window.getContentPane().setBackground(Color.black);
 		window.add(s);
 		window.setVisible(true);

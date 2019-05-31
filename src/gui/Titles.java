@@ -1,4 +1,4 @@
-package zuma;
+package gui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,14 +9,17 @@ import javax.vecmath.*;
 import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.universe.*;
 
+import game.SpaceShip;
+import game.SpellCard3;
+
 public class Titles implements ActionListener {
 	private SpaceShip player;
 	private Text3D text;
-	private TransformGroup objLength; 
+	private TransformGroup objLength;
 	private Timer timer;
 	private int pri;
 	private int d;
-	private SpellCard3 es; 
+	private SpellCard3 es;
 
 	public static void main(String[] args) {
 		Titles t = new Titles();
@@ -74,41 +77,42 @@ public class Titles implements ActionListener {
 //		objRoot.addChild(ambientLightNode);
 //		return objRoot;
 //	}
-	
-	BranchGroup addEnemyHP(SpellCard3 es) {
+
+	public BranchGroup addEnemyHP(SpellCard3 es) {
 		BranchGroup objRoot = new BranchGroup();
-		TransformGroup objRotate = new TransformGroup(); 
-		TransformGroup objTrans = new TransformGroup(); 
-		
-		objLength = new TransformGroup(); 
+		TransformGroup objRotate = new TransformGroup();
+		TransformGroup objTrans = new TransformGroup();
+
+		objLength = new TransformGroup();
 		objLength.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		Transform3D trans = new Transform3D();  
-		this.es = es;   
+		Transform3D trans = new Transform3D();
+		this.es = es;
 		Cylinder c = new Cylinder(0.02f, 0.8f);
 		Appearance a = new Appearance();
-		Material m = new Material(new Color3f(1.0f, 0.0f, 0.0f), new Color3f(1.0f, 0.0f, 0.0f), new Color3f(1.0f, 0.0f, 0.0f), new Color3f(1.0f, 1.0f, 1.0f), 80.0f);
+		Material m = new Material(new Color3f(1.0f, 0.0f, 0.0f), new Color3f(1.0f, 0.0f, 0.0f),
+				new Color3f(1.0f, 0.0f, 0.0f), new Color3f(1.0f, 1.0f, 1.0f), 80.0f);
 		m.setLightingEnable(true);
 		a.setMaterial(m);
 		c.setAppearance(a);
 		objRotate.addChild(c);
 		objRotate.getTransform(trans);
-		trans.rotZ((float) (0.5*Math.PI));
+		trans.rotZ((float) (0.5 * Math.PI));
 		objRotate.setTransform(trans);
 		objLength.addChild(objRotate);
 		objLength.getTransform(trans);
-		trans.setScale(new  Vector3d(1, 1, 1));
+		trans.setScale(new Vector3d(1, 1, 1));
 		objLength.setTransform(trans);
 		objTrans.addChild(objLength);
 		objTrans.getTransform(trans);
-		trans.setTranslation(new Vector3f(0.0f,0.65f,  0.0f));
+		trans.setTranslation(new Vector3f(0.0f, 0.65f, 0.0f));
 		objTrans.setTransform(trans);
 		objRoot.addChild(objTrans);
 
-		text.setString("Score: " + player.getScoreString() + "    "+"             		   Stage: " + es.getSc());
-		return objRoot; 
+		text.setString("Score: " + player.getScoreString() + "    " + "             		   Stage: " + es.getSc());
+		return objRoot;
 	}
 
-	BranchGroup addObjects(SpaceShip player) {
+	public BranchGroup addObjects(SpaceShip player) {
 		BranchGroup objRoot = new BranchGroup();
 		this.setPlayer(player);
 
@@ -153,11 +157,13 @@ public class Titles implements ActionListener {
 		if (player.getScore() != pri)
 			d = (player.getScore() - pri);
 		if (d > 0)
-			text.setString("Score: " + player.getScoreString() + " +" + d+"             		   Stage: " + es.getSc());
+			text.setString(
+					"Score: " + player.getScoreString() + " +" + d + "             		   Stage: " + es.getSc());
 		else if (d < 0)
-			text.setString("Score: " + player.getScoreString() + " " + d+"              		  Stage: " + es.getSc());
+			text.setString(
+					"Score: " + player.getScoreString() + " " + d + "              		  Stage: " + es.getSc());
 		pri = player.getScore();
-		
+
 		Transform3D trans = new Transform3D();
 		objLength.getTransform(trans);
 		trans.setScale(new Vector3d(es.rate(), 1, 1));

@@ -1,4 +1,4 @@
-package zuma;
+package game;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
@@ -33,41 +33,39 @@ import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
+import gui.Earth;
+import gui.Titles;
+
 public class Main extends Applet implements ActionListener, KeyListener {
-	
-	public static final int SCALE = 240; 
+
+	public static final int SCALE = 240;
 	private TransformGroup objTrans;
 	private Transform3D trans;
-	private BranchGroup objRoot; 
+	private BranchGroup objRoot;
 	private BranchGroup enemyBullets;
-	private BranchGroup myBullets; 
+	private BranchGroup myBullets;
 	private BranchGroup player;
-	private BranchGroup enemy; 
+	private BranchGroup enemy;
 	private SpaceShip ss;
 	private int color;
 	private Color3f[] colorSet;
-	private SpellCard3 sc1; 
-	private SpellCard4 sc2; 
-	private SpellCard5 sc3; 
+	private SpellCard3 sc1;
 	private float view = 0.35f;
 	private boolean isAsc;
 	private boolean isDesc;
 	private Titles hud;
-	private Earth bg; 
+	private Earth bg;
 
 	Appearance ap = new Appearance();
-	
+
 	public BranchGroup createSceneGraph() {
-		BoundingSphere bounds =
-				new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
 		Color3f light1Color = new Color3f(1.0f, 1.0f, 1.0f);
 		Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
-		DirectionalLight light1
-				= new DirectionalLight(light1Color, light1Direction);
+		DirectionalLight light1 = new DirectionalLight(light1Color, light1Direction);
 		light1.setInfluencingBounds(bounds);
 		objRoot.addChild(light1);
-	
-		
+
 		// Set up the ambient light
 		Color3f ambientColor = new Color3f(1.0f, 1.0f, 1.0f);
 		AmbientLight ambientLightNode = new AmbientLight(ambientColor);
@@ -78,46 +76,44 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		timer.start();
 		return objRoot;
 	}
+
 	public Main() {
 		objTrans = new TransformGroup();
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
-		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objTrans.getTransform(trans);
 		trans.setScale(0.02);
 		objTrans.setTransform(trans);
 		ss = new SpaceShip(objTrans);
-		
+
 		objTrans = new TransformGroup();
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
-		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objTrans.getTransform(trans);
 		trans.setScale(0.03);
 		objTrans.setTransform(trans);
 		sc1 = new SpellCard3(objTrans);
-		
+
 		this.addKeyListener(ss);
 		this.setFocusable(true);
 		setLayout(new BorderLayout());
-		GraphicsConfiguration config =
-				SimpleUniverse.getPreferredConfiguration();
+		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
 		Canvas3D c = new Canvas3D(config);
 		add("Center", c);
 		c.addKeyListener(this);
-		
-		
-		
+
 		BranchGroup scene = createSceneGraph();
 		SimpleUniverse u = new SimpleUniverse(c);
 		u.getViewingPlatform().setNominalViewingTransform();
 		u.addBranchGraph(scene);
-		objTrans = new TransformGroup(); 
+		objTrans = new TransformGroup();
 		scene = new BranchGroup();
 		scene = ss.createSceneGraph();
 		objTrans.addChild(scene);
-		//u.addBranchGraph(scene);
-		
+		// u.addBranchGraph(scene);
+
 		myBullets = new BranchGroup();
 		myBullets = ss.getBullet();
 		myBullets.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
@@ -125,8 +121,8 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		myBullets.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		myBullets.setCapability(BranchGroup.ALLOW_DETACH);
 		objTrans.addChild(myBullets);
-		//u.addBranchGraph(myBullets);
-		
+		// u.addBranchGraph(myBullets);
+
 		enemy = new BranchGroup();
 		enemy = sc1.createSceneGraph();
 		enemy.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
@@ -134,8 +130,8 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		enemy.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		enemy.setCapability(BranchGroup.ALLOW_DETACH);
 		objTrans.addChild(enemy);
-		//u.addBranchGraph(enemy);
-		
+		// u.addBranchGraph(enemy);
+
 		enemyBullets = new BranchGroup();
 		enemyBullets = sc1.getBullet();
 		enemyBullets.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
@@ -143,12 +139,12 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		enemyBullets.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		enemyBullets.setCapability(BranchGroup.ALLOW_DETACH);
 		objTrans.addChild(enemyBullets);
-		//u.addBranchGraph(enemyBullets);
+		// u.addBranchGraph(enemyBullets);
 		objTrans.getTransform(trans);
-		trans.rotX((float)(-1*view*Math.PI));
+		trans.rotX((float) (-1 * view * Math.PI));
 		objTrans.setTransform(trans);
-		   bg = new Earth();  
-		   objTrans.addChild(bg.addearth());
+		bg = new Earth();
+		objTrans.addChild(bg.addearth());
 		objRoot = new BranchGroup();
 		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
 		objRoot.setCapability(BranchGroup.ALLOW_DETACH);
@@ -162,78 +158,79 @@ public class Main extends Applet implements ActionListener, KeyListener {
 //		bg.setApplicationBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
 
 		objTrans.addChild(scene);
-		u.addBranchGraph(objRoot);		ss.setTarget(sc1);		sc1.setPlayer(ss);
+		u.addBranchGraph(objRoot);
+		ss.setTarget(sc1);
+		sc1.setPlayer(ss);
 		isAsc = false;
 		isDesc = false;
-		
-		  TextureLoader loader = new TextureLoader("./Texture/bg.png",
 
-				      "LUMINANCE", new Container());
-		   Texture texture = loader.getTexture();
+		TextureLoader loader = new TextureLoader("./Texture/bg.png",
 
-		   texture.setBoundaryModeS(Texture.WRAP);
+				"LUMINANCE", new Container());
+		Texture texture = loader.getTexture();
 
-		   texture.setBoundaryModeT(Texture.WRAP);
+		texture.setBoundaryModeS(Texture.WRAP);
 
-		   texture.setBoundaryColor( new Color4f( 0.0f, 1.0f, 0.0f, 0.0f ) );
-		   TextureAttributes texAttr = new 
-				   TextureAttributes();
+		texture.setBoundaryModeT(Texture.WRAP);
 
-		   texAttr.setTextureMode(TextureAttributes.MODULATE);
-		   ap.setTexture(texture);
+		texture.setBoundaryColor(new Color4f(0.0f, 1.0f, 0.0f, 0.0f));
+		TextureAttributes texAttr = new TextureAttributes();
 
-		   ap.setTextureAttributes(texAttr);
-		   
-		   hud = new Titles();
-		   objRoot.addChild(hud.addObjects(ss));
-		   objRoot.addChild(hud.addEnemyHP(sc1));
-		   
+		texAttr.setTextureMode(TextureAttributes.MODULATE);
+		ap.setTexture(texture);
+
+		ap.setTextureAttributes(texAttr);
+
+		hud = new Titles();
+		objRoot.addChild(hud.addObjects(ss));
+		objRoot.addChild(hud.addEnemyHP(sc1));
 
 	}
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_W)
+		if (e.getKeyCode() == KeyEvent.VK_W)
 			isAsc = true;
-		if(e.getKeyCode() == KeyEvent.VK_S)
+		if (e.getKeyCode() == KeyEvent.VK_S)
 			isDesc = true;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getKeyCode() == KeyEvent.VK_W)
+		if (e.getKeyCode() == KeyEvent.VK_W)
 			isAsc = false;
-		if(e.getKeyCode() == KeyEvent.VK_S)
+		if (e.getKeyCode() == KeyEvent.VK_S)
 			isDesc = false;
-		
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		//ss.actionPerformed(e);
-		//ss.shot();
-		if(isAsc)
+		// ss.actionPerformed(e);
+		// ss.shot();
+		if (isAsc)
 			view = view + 0.001f;
-		if(isDesc)
+		if (isDesc)
 			view = view - 0.001f;
 
-			objTrans.getTransform(trans);
-			trans.rotX((float)(-1*view*Math.PI));
-			//objTrans.setTransform(trans);
-			
+		objTrans.getTransform(trans);
+		trans.rotX((float) (-1 * view * Math.PI));
+		// objTrans.setTransform(trans);
+
 	}
 
 	public static void main(String[] args) {
 		System.setProperty("sun.awt.noerasebackground", "true");
 		Main m = new Main();
-		MainFrame mf = new MainFrame(m, 4*SCALE, 4*SCALE);
+		MainFrame mf = new MainFrame(m, 4 * SCALE, 4 * SCALE);
 	}
 }

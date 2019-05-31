@@ -14,19 +14,23 @@ import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.geometry.Sphere;
 
+import game.SpaceShip;
+
 public class Ball implements ActionListener {
-	private Transform3D trans; 
-	public BranchGroup objRoot; 
-	private TransformGroup objTrans; 
-	private int color; 
+	private Transform3D trans;
+	public BranchGroup objRoot;
+	private TransformGroup objTrans;
+	private int color;
 	private Vector3f position;
 	private Vector3f speed;
-	private Timer timer; 
+	private Timer timer;
 	private Appearance ap;
 	private Color3f black;
-	private SpaceShip player; 
-	private static final Color3f[] COLOR_SET = new Color3f[]{new Color3f(1.0f, 0.0f, 0.0f),new Color3f(1.0f, 0.380f, 0f),new Color3f(1.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 1.0f),new Color3f(0.0f, 0.0f, 1.0f),new Color3f(0.627f, 0.125f, 0.941f)};
-	
+	private SpaceShip player;
+	private static final Color3f[] COLOR_SET = new Color3f[] { new Color3f(1.0f, 0.0f, 0.0f),
+			new Color3f(1.0f, 0.380f, 0f), new Color3f(1.0f, 1.0f, 0.0f), new Color3f(0.0f, 1.0f, 0.0f),
+			new Color3f(0.0f, 1.0f, 1.0f), new Color3f(0.0f, 0.0f, 1.0f), new Color3f(0.627f, 0.125f, 0.941f) };
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -34,53 +38,53 @@ public class Ball implements ActionListener {
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
-		if(player !=null) {	
+		if (player != null) {
 			Vector3f d = player.getPosition();
 			d.scale(-1.00f);
 			d.sub(this.position);
-			if(d.length()<0.05) {
+			if (d.length() < 0.05) {
 				objRoot.detach();
 				timer.stop();
 			}
 		}
-		if(position.length()>1) {
+		if (position.length() > 1) {
 			objRoot.detach();
-		timer.stop();
+			timer.stop();
 		}
 	}
-	
+
 	public BranchGroup createSceneGraph() {
 		objTrans.addChild(new Sphere(0.01f, ap));
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
-		objRoot.addChild(objTrans); 
+		objRoot.addChild(objTrans);
 		timer = new Timer(17, this);
 		timer.start();
 		return objRoot;
 	}
-	
-	public Ball(Vector3f position,int color) {
+
+	public Ball(Vector3f position, int color) {
 		this.color = color;
-		ap = new Appearance();  
-		black = new Color3f(0.0f, 0.0f, 0.0f); 
+		ap = new Appearance();
+		black = new Color3f(0.0f, 0.0f, 0.0f);
 		ap.setMaterial(new Material(COLOR_SET[color], black, COLOR_SET[color], black, 80.f));
 		objTrans = new TransformGroup();
 		objRoot = new BranchGroup();
 		trans = new Transform3D();
-		this.color = color; 
+		this.color = color;
 		this.position = position;
 		objRoot.setCapability(BranchGroup.ALLOW_DETACH);
 		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
 		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 	}
-	
+
 	public void setSpeed(Vector3f speed) {
 		this.speed = speed;
 	}
-	
+
 	public void setPlayer(SpaceShip player) {
-		this.player = player; 
+		this.player = player;
 	}
 }

@@ -14,27 +14,23 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
-public class menu extends JComponent{
+public class Menu extends JComponent {
 	private static final long serialVersionUID = 1L;
 
-
-	
 //	static JFrame launch = new JFrame("Zuma");
 //	private String name;
 //	ArrayList<String> strings= new ArrayList<>();
 //	JPanel panel = new JPanel();
 //
 //	 final JButton btn = new JButton("start");
-	
-     
+
 	public void paintComponent(Graphics g) {
 //		super.paint(g);
 //		strings.add("zuma");
 		g.setColor(Color.green);
 		Font font = new Font("Comic Sans MS", Font.BOLD, 80);
 		g.setFont(font);
-	
+
 		g.drawString("STG Zuma" + "\n", 530, 390);
 		g.setColor(Color.green);
 		font = new Font("Comic Sans MS", Font.BOLD, 60);

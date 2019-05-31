@@ -8,12 +8,12 @@ import javax.swing.JFrame;
 
 import com.sun.j3d.utils.applet.MainFrame;
 
-import zuma.Main;
+import game.Main;
 
-public class screencontrol implements KeyListener{
+public class Screencontrol implements KeyListener{
 
-	menu m=new menu();
-	public screencontrol(menu m) {
+	Menu m=new Menu();
+	public Screencontrol(Menu m) {
 		this.m=m;
 	}
 	
@@ -29,7 +29,7 @@ public class screencontrol implements KeyListener{
 		}
 		if(key==KeyEvent.VK_S) {
 			//Into the score board
-			sbTest sbTest=new sbTest();
+			SbTest sbTest=new SbTest();
 		}
 		if(key==KeyEvent.VK_A) {
 			JFrame window=new JFrame("ABOUT");

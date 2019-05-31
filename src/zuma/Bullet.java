@@ -14,6 +14,8 @@ import javax.vecmath.Vector3f;
 
 import com.sun.j3d.utils.geometry.Cone;
 
+import game.EnemyShip;
+
 public class Bullet implements ActionListener {
 	private BranchGroup objRoot;
 	private TransformGroup objTrans;
@@ -21,57 +23,62 @@ public class Bullet implements ActionListener {
 	private Transform3D trans;
 	private int color;
 	private Vector3f speed;
-	private static final Color3f[] COLOR_SET = new Color3f[]{new Color3f(1.0f, 0.0f, 0.0f),new Color3f(1.0f, 0.380f, 0f),new Color3f(1.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 0.0f),new Color3f(0.0f, 1.0f, 1.0f),new Color3f(0.0f, 0.0f, 1.0f),new Color3f(0.627f, 0.125f, 0.941f)};
+	private static final Color3f[] COLOR_SET = new Color3f[] { new Color3f(1.0f, 0.0f, 0.0f),
+			new Color3f(1.0f, 0.380f, 0f), new Color3f(1.0f, 1.0f, 0.0f), new Color3f(0.0f, 1.0f, 0.0f),
+			new Color3f(0.0f, 1.0f, 1.0f), new Color3f(0.0f, 0.0f, 1.0f), new Color3f(0.627f, 0.125f, 0.941f) };
 	private Vector3f position;
 	private Timer timer;
 	private Appearance ap;
 	private Color3f black;
 	private float angle;
 	private EnemyShip target;
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		position.add(speed);
 		objTrans.getTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
-		
-		if(position.length()>1.5) {
+
+		if (position.length() > 1.5) {
 			objRoot.detach();
 			timer.stop();
 		}
-		
-		if(target!= null && position.length()<=0.1f) {
-			
+
+		if (target != null && position.length() <= 0.1f) {
+
 			target.damaged();
 			objRoot.detach();
 			timer.stop();
 		}
-		
-		//timer.removeActionListener(this);
+
+		// timer.removeActionListener(this);
 	}
+
 	public BranchGroup createSceneGraph() {
 		objRotate.addChild(new Cone(0.01f, 0.02f, ap));
 		objRotate.getTransform(trans);
 		trans.rotZ(angle);
 		objRotate.setTransform(trans);
-		
+
 		objTrans.addChild(objRotate);
 		objTrans.getTransform(trans);
 		trans.set(position);
-		
+
 		objTrans.setTransform(trans);
 		objRoot.addChild(objTrans);
-		
-		return objRoot; 
+
+		return objRoot;
 	}
+
 	public Bullet(Vector3f position, float angle, int color) {
 		timer = new Timer(17, this);
 		timer.start();
 		this.angle = angle;
 		this.color = color;
 		this.position = position;
-		ap = new Appearance(); 
+		ap = new Appearance();
 		speed = new Vector3f();
 		trans = new Transform3D();
 		objRoot = new BranchGroup();
@@ -84,7 +91,7 @@ public class Bullet implements ActionListener {
 		objTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		ap.setMaterial(new Material(COLOR_SET[color], black, COLOR_SET[color], black, 80.f));
 	}
-	
+
 	public void setSpeed(Vector3f speed) {
 		this.speed = speed;
 	}
@@ -92,9 +99,9 @@ public class Bullet implements ActionListener {
 	public TransformGroup getTransformGroup() {
 		return objTrans;
 	}
-	
+
 	public void setTarget(EnemyShip target) {
-		this.target = target; 
+		this.target = target;
 	}
 
 }
