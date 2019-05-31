@@ -72,7 +72,7 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		isRight = false;
 		isUp = false;
 		isDown = false;
-		color = RED;  
+		setColor(RED);  
 		}
 	
 	public Vector3f getPosition() {
@@ -83,11 +83,11 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 		Transform3D trans = new Transform3D(); 
 		objRotate.getTransform(trans);
 		position.scale(-1f);
-		Bullet bullet = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ, color);
-		Bullet bullet1 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.04*Math.PI), color);
-		Bullet bullet2 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.04*Math.PI), color);
-		Bullet bullet3 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.08*Math.PI), color);
-		Bullet bullet4 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.08*Math.PI), color);
+		Bullet bullet = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ, getColor());
+		Bullet bullet1 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.04*Math.PI), getColor());
+		Bullet bullet2 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.04*Math.PI), getColor());
+		Bullet bullet3 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ+(float)(0.08*Math.PI), getColor());
+		Bullet bullet4 = new Bullet(new Vector3f(position.getX(), position.getY(), position.getZ()), angleZ-(float)(0.08*Math.PI), getColor());
 		position.scale(-1f);
 		Vector3f speed = new Vector3f(position.getX(), position.getY(), position.getZ());
 		speed.normalize();
@@ -228,10 +228,10 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getKeyCode() == KeyEvent.VK_X) {
-			if(color >= VIOLET)
-				color = RED;
+			if(getColor() >= VIOLET)
+				setColor(RED);
 			else
-				color = color + 1;
+				setColor(getColor() + 1);
 		}
 
 		if(e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -499,5 +499,19 @@ public class SpaceShip extends Applet implements ActionListener, KeyListener {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+	public String getScoreString() {
+		// TODO Auto-generated method stub
+		
+		return String.format("%08d", score);
 	}
 }

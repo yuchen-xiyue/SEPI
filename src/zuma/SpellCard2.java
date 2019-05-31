@@ -66,4 +66,10 @@ public class SpellCard2 extends EnemyShip {
 		ball3.setPlayer(player);
 	}
 
+	@Override
+	protected float rate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

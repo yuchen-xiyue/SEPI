@@ -26,4 +26,9 @@ public class SpellCard1 extends EnemyShip {
 			
 		}
 	}
+	@Override
+	protected float rate() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

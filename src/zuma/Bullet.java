@@ -36,7 +36,7 @@ public class Bullet implements ActionListener {
 		trans.set(position);
 		objTrans.setTransform(trans);
 		
-		if(position.length()>1) {
+		if(position.length()>1.5) {
 			objRoot.detach();
 			timer.stop();
 		}

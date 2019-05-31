@@ -43,10 +43,12 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	private int color;
 	private Timer timer;
 	protected SpaceShip player; 
-	private int hitPoint;
+	protected int hitPoint = 1000;
 	
 	public EnemyShip(TransformGroup objTrans) {
 		objRoot = new  BranchGroup(); 
+		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+		objRoot.setCapability(BranchGroup.ALLOW_DETACH);
 		tg = new TransformGroup[6];
 		objRotate = new TransformGroup();
 		objRotate1 = new TransformGroup();
@@ -87,6 +89,9 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(hitPoint <= 0) {
+			next();
+		}
 		if (sign == 1) {
 			radius += 0.01;
 			if (radius >= 1.0)
@@ -263,4 +268,7 @@ public abstract class EnemyShip extends Applet implements ActionListener, KeyLis
 		this.player = player; 
 		
 	}
+	
+	protected abstract float rate();    
+	protected abstract void next(); 
 }

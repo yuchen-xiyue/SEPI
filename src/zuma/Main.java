@@ -47,10 +47,13 @@ public class Main extends Applet implements ActionListener, KeyListener {
 	private int color;
 	private Color3f[] colorSet;
 	private SpellCard3 sc1; 
+	private SpellCard4 sc2; 
+	private SpellCard5 sc3; 
 	private float view = 0.35f;
 	private boolean isAsc;
 	private boolean isDesc;
-	private Hud hud;
+	private Titles hud;
+	private Earth bg; 
 
 	Appearance ap = new Appearance();
 	
@@ -144,16 +147,19 @@ public class Main extends Applet implements ActionListener, KeyListener {
 		objTrans.getTransform(trans);
 		trans.rotX((float)(-1*view*Math.PI));
 		objTrans.setTransform(trans);
+		   bg = new Earth();  
+		   objTrans.addChild(bg.addearth());
 		objRoot = new BranchGroup();
-		   objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		objRoot.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+		objRoot.setCapability(BranchGroup.ALLOW_DETACH);
 		objRoot.addChild(objTrans);
 		TextureLoader myLoader = new TextureLoader("Texture/bg.png", this);
 		ImageComponent2D myImage = myLoader.getImage();
 		scene = new BranchGroup();
 		scene.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-		Background bg = new Background(scene);
-		bg.setImage(myImage);
-		bg.setApplicationBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+//		Background bg = new Background(scene);
+//		bg.setImage(myImage);
+//		bg.setApplicationBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
 
 		objTrans.addChild(scene);
 		u.addBranchGraph(objRoot);		ss.setTarget(sc1);		sc1.setPlayer(ss);
@@ -178,8 +184,10 @@ public class Main extends Applet implements ActionListener, KeyListener {
 
 		   ap.setTextureAttributes(texAttr);
 		   
-		   hud = new Hud(ss);
-		   objRoot.addChild(hud.createSceneGraph());
+		   hud = new Titles();
+		   objRoot.addChild(hud.addObjects(ss));
+		   objRoot.addChild(hud.addEnemyHP(sc1));
+		   
 
 	}
 	@Override
@@ -226,6 +234,6 @@ public class Main extends Applet implements ActionListener, KeyListener {
 	public static void main(String[] args) {
 		System.setProperty("sun.awt.noerasebackground", "true");
 		Main m = new Main();
-		MainFrame mf = new MainFrame(m, 4*SCALE, 3*SCALE);
+		MainFrame mf = new MainFrame(m, 4*SCALE, 4*SCALE);
 	}
 }

@@ -52,11 +52,15 @@ public class RollingBall implements ActionListener {
 			d.scale(-1.00f);
 			d.sub(this.position);
 			if(d.length()<0.05) {
+				if(color == player.getColor())
+					player.scoreUpdate((int) (20-10*length));
+				else
+					player.scoreUpdate(-10);
 				objRoot.detach();
 				timer.stop();
 			}
 		}
-		if(position.length()>1) {
+		if(position.length()>1.5) {
 			objRoot.detach();
 		timer.stop();
 		}
