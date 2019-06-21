@@ -16,14 +16,8 @@ import com.sun.j3d.utils.geometry.Sphere;
 
 import game.SpaceShip;
 
-public class Ball implements ActionListener {
-	private Transform3D trans;
-	public BranchGroup objRoot;
-	private TransformGroup objTrans;
+public class Ball extends Sprite {
 	private int color;
-	private Vector3f position;
-	private Vector3f speed;
-	private Timer timer;
 	private Appearance ap;
 	private Color3f black;
 	private SpaceShip player;
