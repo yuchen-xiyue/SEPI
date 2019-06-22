@@ -8,40 +8,41 @@ import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.Timer;
 import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public abstract class Sprite implements ActionListener {
 	protected Transform3D trans;
 	protected BranchGroup objRoot;
-	private TransformGroup objAngle;
-	private TransformGroup objEternal;
-	private TransformGroup objScale;
+	protected TransformGroup objAngle;
+	protected TransformGroup objEternal;
+	protected TransformGroup objScale;
 	protected TransformGroup objTrans;
-	private Vector3f scale;
+	protected Vector3f scale;
 	protected Vector3f speed;
 	protected Vector3f position;
-	private AxisAngle4f angles;
+	protected AxisAngle4f angles;
 	protected Timer timer;
 	
-	private Sprite(Vector3f scale, Vector3f position, Vector3f speed, AxisAngle4f angles) {
+	protected Sprite(Vector3f scale, Vector3f position, Vector3f speed, AxisAngle4f angles) {
 		this.scale = scale;
 		this.angles = angles;
 		this.position = position;
 		this.speed = speed;
-		if(scale == null) {
-			scale = new Vector3f(1.0f, 1.0f, 1.0f);
+		if(this.scale == null) {
+			this.scale = new Vector3f(1.0f, 1.0f, 1.0f);
 		}
 		
-		if(speed == null) {
-			speed = new Vector3f();
+		if(this.speed == null) {
+			this.speed = new Vector3f();
 		}
 		
-		if(angles == null) {
-			angles = new AxisAngle4f();
+		if(this.angles == null) {
+			this.angles = new AxisAngle4f();
 		}
 		
-		if(position == null) {
-			position = new Vector3f();
+		if(this.position == null) {
+			this.position = new Vector3f();
 		}
 		initialize();	}
 	
@@ -63,14 +64,16 @@ public abstract class Sprite implements ActionListener {
 		
 		
 		trans = new Transform3D();
-		trans.set(scale);
+		trans.setScale(new Vector3d(scale));
 		objScale.setTransform(trans);
 		
 		trans = new Transform3D();
-		trans.set(angles);
+		objAngle.getTransform(trans);
+		trans.setRotation(angles);
 		objAngle.setTransform(trans);
 		
 		trans = new Transform3D();
+		objTrans.setTransform(trans);
 		trans.set(position);
 		objTrans.setTransform(trans);
 		
@@ -81,7 +84,7 @@ public abstract class Sprite implements ActionListener {
 		objRoot.addChild(objEternal);
 	}
 	
-	public void interval() {
+	protected void interval() {
 		position.add(speed);
 		trans = new Transform3D();
 		objTrans.getTransform(trans);
@@ -89,11 +92,20 @@ public abstract class Sprite implements ActionListener {
 		objTrans.setTransform(trans);
 	}
 	
-	public void run() {
+	protected void run() {
 		timer = new Timer(17, this);
 		timer.start();
 	}
 
+	protected boolean vanish()  {
+		if(position.length()>=3.0f)
+			return true;
+		return  false;
+	}
+	protected void terminated() {
+		objRoot.detach();
+		timer.stop();
+	}
 	@Override
 	public abstract void actionPerformed(ActionEvent arg0);
 }
